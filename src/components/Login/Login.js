@@ -3,7 +3,7 @@
             import logo from '../../images/loginPhoto.jpg';
             import TextField from '@mui/material/TextField';
             import Button from '@mui/material/Button';
-            // import LoginIcon from '@mui/icons-material/Login.js';
+            import LoginIcon from '@mui/icons-material/Login.js';
 
             export default class OldLogin extends Component {
 
@@ -70,7 +70,7 @@
                                     <div class="pt-1 mb-4">
                                       <Button
                                         variant="contained"
-                                        // endIcon={<LoginIcon />}
+                                        endIcon={<LoginIcon />}
                                       >
                                         Најавете се
                                       </Button>
