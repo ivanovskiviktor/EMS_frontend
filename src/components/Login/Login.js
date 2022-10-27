@@ -4,10 +4,55 @@
             import TextField from '@mui/material/TextField';
             import Button from '@mui/material/Button';
             import LoginIcon from '@mui/icons-material/Login.js';
+            import {Alert} from "react-bootstrap";
+            import AuthenticationService from "../service/AuthenticationService.js";
+            const AUTH_TOKEN = "auth_token";
 
             export default class OldLogin extends Component {
 
+              state = {
+                data: {
+                  email: "",
+                  password: "",
+                },
+                errorMessage: "",
+                errorMessageVisible: false,
+              };
+            
+              handleChange = (e) =>
+                this.setState({
+                  data: { ...this.state.data, [e.target.name]: e.target.value },
+                });
+            
+              handleSubmit = (e) => {
+                const { data } = this.state;
+                let data2 = data.email + ":" + data.password;
+                let k = data2.split(":");
+                const request = Buffer.from(data2).toString("base64");
+                AuthenticationService.loginUser(request)
+                  .then((res) => {
+                    localStorage.setItem(AUTH_TOKEN, res.data);
+                    AuthenticationService.userRole().then((res) => {
+                      localStorage.setItem("ROLES", res.data.roles);
+                      localStorage.setItem("loggedUserId", res.data.id);
+                      this.props.history.push("/homePage")
+                    }).finally();
+                  })
+                  .catch((err) => {
+                    if (err.message === "Request failed with status code 403") {
+                      this.setState({
+                        errorMessageVisible: true,
+                        errorMessage: "Вашата е-маил адреса или лозинка се неточни",
+                      });
+                    }
+                  });
+            
+              };  
+
             render() {
+                const { data } = this.state;
+                let data2 = data.email + ":" + data.password;
+                let k = data2.split(":");
                 return (
                   <section
                     class="vh-100"
@@ -34,7 +79,7 @@
                               </div>
                               <div class="col-md-6 col-lg-7 d-flex align-items-center">
                                 <div class="card-body p-4 p-lg-5 text-black">
-                                  <form>
+                                  <form onSubmit={this.handleSubmit}>
                                     <div class="d-flex align-items-center mb-3 pb-1">
                                       <i
                                         class="fas fa-cubes fa-2x me-3"
@@ -55,6 +100,9 @@
                                         className="form-control form-control-lg"
                                         id="outlined-required"
                                         label="Е-маил адреса"
+                                        name="email"
+                                        value={k[0]}
+                                        onChange={this.handleChange}
                                       />
                                     </div>
                                     <div class="form-outline mb-4">
@@ -64,6 +112,9 @@
                                         id="outlined-required"
                                         label="Лозинка"
                                         type="password"
+                                        name="password"
+                                        value={k[1]}
+                                         onChange={this.handleChange}
                                       />
                                     </div>
 
@@ -71,11 +122,17 @@
                                       <Button
                                         variant="contained"
                                         endIcon={<LoginIcon />}
+                                        onClick={() => {
+                                          this.handleSubmit()
+                                        }}
                                       >
                                         Најавете се
                                       </Button>
                                     </div>
-
+                                   {this.state.errorMessageVisible && (
+                                    <div class="pt-1 mb-4">
+                                    <Alert severity="error">{this.state.errorMessage}</Alert>
+                                    </div> )}
                                     <br />
                                     <br />
                                     <p

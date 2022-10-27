@@ -2,7 +2,8 @@
   import React from 'react';
   import Login from './components/Login/Login.js';
   import Register from './components/Register/Register.js';
-  import OldRegister from './components/Register/OldRegister';
+
+
   import {
     BrowserRouter as Router,
     Routes,
@@ -25,8 +26,7 @@
                   
                     <Route exact path='/' element={<Login/>} />
                     <Route exact path="/register" element={<Register/>} />
-                    <Route exact path="/reg" element={<OldRegister/>}/>
-              
+                    <Route exact path="/login" element={<OldLogin/>}/>
             </Routes>
 
           </div>
