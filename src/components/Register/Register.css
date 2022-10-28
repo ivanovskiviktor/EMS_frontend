@@ -1,0 +1,17 @@
+.card {
+    border-radius: 1rem;
+}
+
+.img-fluid {
+    border-radius: 1rem 0 0 1rem;
+    width: 500px;
+    height: 671.5px;
+}
+
+.fw-normal {
+    letter-spacing: 1px;
+}
+
+.paragraph, .link {
+    color: #393f81;
+}

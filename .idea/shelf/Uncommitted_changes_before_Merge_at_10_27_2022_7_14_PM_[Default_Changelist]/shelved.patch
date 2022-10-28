@@ -1,0 +1,19 @@
+Index: src/components/service/UserService.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import axios from \"axios\";\r\nimport instance from \"../instance/instance\";\r\n\r\nconst instanceUnauthorized = axios.create({\r\n    baseURL: process.env.REACT_APP_HOST_ENV,\r\n    headers: {\r\n        'Access-Control-Allow-Origin': '*'\r\n    },\r\n});\r\n\r\nconst UserService = {\r\n    activeUsers: () => {\r\n        return instance.get(`/rest/user/getUserDetails`);\r\n    },\r\n    enableUser: (id) => {\r\n        return instance.post(`/rest/user/enableUser/${id}`, {\r\n            headers: {\r\n                'Content-Type': 'application/json',\r\n            }\r\n        });\r\n    },\r\n    adminRegisterUser:(userHelper)=>{\r\n        return instance.post(`rest/user/registerUser`, userHelper,{\r\n        headers:{\r\n            'Content-Type': 'application/json',\r\n        }\r\n    });},\r\n    registerUser: (userHelper, email, password,) => {\r\n        return instanceUnauthorized.post(\"/rest/user/signup\", userHelper,{\r\n            headers: {\r\n                'Content-Type': 'application/json',\r\n                'email': email,\r\n                'password': password,\r\n            }\r\n        });\r\n    },\r\n    forgotPassword: (email) => {\r\n        return instanceUnauthorized.post(\"/rest/user/forgot_password\", {\r\n            headers: {\r\n                'Content-Type': 'application/json',\r\n                'email': email,\r\n            }\r\n        });\r\n    }\r\n    } \r\n\r\n    export default UserService;\r\n  \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/components/service/UserService.js b/src/components/service/UserService.js
+--- a/src/components/service/UserService.js	(revision 66fb889b21412f7b60a62b08c1ed40e1e6ca6c56)
++++ b/src/components/service/UserService.js	(date 1666858020981)
+@@ -2,7 +2,7 @@
+ import instance from "../instance/instance";
+ 
+ const instanceUnauthorized = axios.create({
+-    baseURL: process.env.REACT_APP_HOST_ENV,
++    baseURL: 'http://localhost:8080/',
+     headers: {
+         'Access-Control-Allow-Origin': '*'
+     },

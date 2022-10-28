@@ -1,7 +1,6 @@
 import axios from 'axios';
 import instanceA from '../instance/instance.js';
 
-
 const instance = axios.create({
     baseURL: "http://localhost:8080",
     headers: {
@@ -18,18 +17,11 @@ loginUser: (request) => {
         }
     })
 },
-userRole: () => {
+
+getUserDetails: () => {
     return instanceA.get('/rest/user/getUserDetails', null, {
         headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-},
-
-loginUserNew: () => {
-    return instance.get('/externalLogin', {
-        headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         }
     })
 }

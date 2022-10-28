@@ -7,9 +7,10 @@ import Alert from '@mui/material/Alert';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration.js';
 import UserService from "../service/UserService";
 import {sleep} from "../../components/shared/functions/Sleep.js";
+import './Register.css';
 
 
-export default class OldLogin extends Component {
+export default class Register extends Component {
 
       state = {
         data: {
@@ -110,33 +111,20 @@ render() {
         >
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-xl-10">
-              <div class="card" style={{ borderRadius: "1rem" }}>
+              <div class="card">
                 <div class="row g-0">
                   <div class="col-md-6 col-lg-5 d-none d-md-block">
                     <img
                       src={logo}
                       alt="login form"
                       class="img-fluid"
-                      style={{
-                        borderRadius: "1rem 0 0 1rem",
-                        width: "500px",
-                        height: "671.5px",
-                      }}
                     />
                   </div>
                   <div class="col-md-6 col-lg-7 d-flex align-items-center">
                     <div class="card-body p-4 p-lg-5 text-black">
                       <form onSubmit={this.handlesubmit}>
-                        <div class="d-flex align-items-center mb-3 pb-1">
-                          <i
-                            class="fas fa-cubes fa-2x me-3"
-                            style={{ color: "#ff6219" }}
-                          ></i>
-                        </div>
-
                         <h5
                           class="fw-normal mb-3 pb-3"
-                          style={{ letterSpacing: "1px" }}
                         >
                           Регистрирајте се на системот
                         </h5>
@@ -220,11 +208,10 @@ render() {
                         <br />
                         <br />
                         <p
-                          class="mb-5 pb-lg-2"
-                          style={{ color: "#393f81" }}
+                          class="paragraph mb-5 pb-lg-2"
                         >
                           Доколку веќе имате кориснички профил,{" "}
-                          <a href="/" style={{ color: "#393f81" }}>
+                          <a href="/" class="link">
                             најавете се!
                           </a>
                         </p>
