@@ -3,14 +3,14 @@ import instanceA from '../instance/instance.js';
 
 
 const instance = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: process.env.REACT_APP_HOST_ENV,
     headers: {
         'Access-Control-Allow-Origin': '*'
     },
 });
 
 const AuthenticationService ={
-loginUser: (request) => {
+loginUser: (request) => {   
     return instance.post('/rest/login', request, {
         headers: {
             'Content-Type': 'application/json',
@@ -18,18 +18,10 @@ loginUser: (request) => {
         }
     })
 },
-userRole: () => {
+getUserDetails: () => {
     return instanceA.get('/rest/user/getUserDetails', null, {
         headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-},
-
-loginUserNew: () => {
-    return instance.get('/externalLogin', {
-        headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         }
     })
 }

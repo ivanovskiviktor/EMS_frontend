@@ -9,36 +9,13 @@ const instanceUnauthorized = axios.create({
 });
 
 const UserService = {
-    activeUsers: () => {
-        return instance.get(`/rest/user/getUserDetails`);
-    },
-    enableUser: (id) => {
-        return instance.post(`/rest/user/enableUser/${id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-    },
-    adminRegisterUser:(userHelper)=>{
-        return instance.post(`rest/user/registerUser`, userHelper,{
-        headers:{
-            'Content-Type': 'application/json',
-        }
-    });},
+
     registerUser: (userHelper, email, password,) => {
         return instanceUnauthorized.post("/rest/user/signup", userHelper,{
             headers: {
                 'Content-Type': 'application/json',
                 'email': email,
                 'password': password,
-            }
-        });
-    },
-    forgotPassword: (email) => {
-        return instanceUnauthorized.post("/rest/user/forgot_password", {
-            headers: {
-                'Content-Type': 'application/json',
-                'email': email,
             }
         });
     }
