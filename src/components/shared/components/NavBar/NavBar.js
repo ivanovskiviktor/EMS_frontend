@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import axios from "../../../instance/instance.js";
 import * as FaIcons from "react-icons/fa"; 
 import * as AiIcons from "react-icons/ai";
+import {FiUserCheck} from "react-icons/fi";
 import { IconContext } from "react-icons";
 import { SideBarData } from "./SideBarData";
+import { SideBarDataAdmin } from "./SideBarDataAdmin";
 
 
 import './NavBar.css';
@@ -61,7 +63,7 @@ export default class NavBar extends Component {
             <img src={require('../../../../images/application-logo.png')} style={{width:'50px', marginTop:'10px'}} />
             </Link>
             <Link to="#" className="menu-bars">
-            <label style={{fontSize:'20px',marginLeft:'1200px', color:"white"}}>Логирани сте како: {this.state.email}</label>
+            <label style={{fontSize:'20px',marginLeft:'1550px', color:"white"}}><FiUserCheck style={{width:"25px", height:"30px", marginTop:'-3px'}}/> {this.state.email}</label>
             </Link>
             <Link to="#" className="menu-bars">
             <button type="button" onClick={this.logOut} 
@@ -75,7 +77,18 @@ export default class NavBar extends Component {
                   <AiIcons.AiOutlineClose />
                 </Link>
               </li>
-              {SideBarData.map((item, index) => {
+              
+              {role==="ROLE_ADMIN" && SideBarDataAdmin.map((item, index) => {
+                return (
+                  <li key={index} className={item.cName}>
+                    <Link to={item.path}>
+                      {item.icon}
+                      <span>{item.title}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+              {(role==="ROLE_HEAD_OF_DEPARTMENT" || role==="ROLE_EMPLOYEE") && SideBarData.map((item, index) => {
                 return (
                   <li key={index} className={item.cName}>
                     <Link to={item.path}>

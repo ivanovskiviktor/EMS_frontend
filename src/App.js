@@ -2,7 +2,8 @@
   import React from 'react';
   import Login from './components/Login/Login.js';
   import Register from './components/Register/Register.js';
-  import Test from "./components/Test.js";
+  import Dashboard from './components/Dashboard/Dashboard';
+  import OrganizationalDepartmentList from './components/OrganizationalDepartments/OrganizationalDepartmentsList';
   import {
     BrowserRouter as Router,
     Routes,
@@ -21,10 +22,10 @@
         <Router>
           <div className="App">
             <Routes>
-                  
                     <Route exact path='/' element={<Login/>} />
                     <Route exact path="/register" element={<Register/>} />
-                    <Route exact path="/test"  element={<Test/>} />
+                    <Route exact path="/dashboard" element={<Dashboard/>}/>
+                    <Route exact path="/orgDepartments" element={<OrganizationalDepartmentList/>}/>
             </Routes>
 
           </div>

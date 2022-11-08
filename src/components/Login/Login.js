@@ -7,7 +7,6 @@ import LoginIcon from "@mui/icons-material/Login.js";
 import Alert from '@mui/material/Alert';
 import "./Login.css";
 import AuthenticationService from "../service/AuthenticationService.js";
-const AUTH_TOKEN = "auth_token";
 
 export default class Login extends Component {
   state = {
@@ -31,11 +30,12 @@ export default class Login extends Component {
     const request = Buffer.from(data2).toString("base64");
     AuthenticationService.loginUser(request)
       .then((res) => {
-        localStorage.setItem(AUTH_TOKEN, res.data);
+        localStorage.setItem("auth_token", res.data);
         AuthenticationService.getUserDetails()
           .then((res) => {
             localStorage.setItem("ROLES", res.data.roles);
             localStorage.setItem("loggedUserId", res.data.id);
+            window.location.href = "/dashboard";
           })
           .finally();
       })
