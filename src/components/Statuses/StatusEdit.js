@@ -5,21 +5,20 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import OrganizationalDepartmentService from "../service/OrganizationalDepartmentService";
+import StatusService from "../service/StatusService";
 import {Alert} from "@material-ui/lab";
 import {sleep} from "../shared/functions/Sleep";
 
-export default class OrganizationalDepartmentEdit extends Component{
+export default class StatusEdit extends Component{
 
     constructor(props){
         super(props)
 
         this.state = {
             data: {
-                id: this.props.department.id,
-                name: this.props.department.name,
-                label: this.props.department.label,
-                code: this.props.department.code
+                id: this.props.status.id,
+                name: this.props.status.name,
+                label: this.props.status.label
                },
             open: true,
             alert: {'hidden': true, 'message': null, 'type': 'success'}
@@ -35,23 +34,23 @@ export default class OrganizationalDepartmentEdit extends Component{
     handleChange = e => this.setState({data: {...this.state.data, [e.target.name]: e.target.value}});
 
      componentDidMount(){
-        OrganizationalDepartmentService.getDepartmentById(this.state.data.id).then((res)=>{
-           let department = res.data;
+        StatusService.getStatusById(this.state.data.id).then((res)=>{
+           let status = res.data;
            this.setState({
-            data: department
+            data: status
         })
          })
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    let selectedDepartment = OrganizationalDepartmentService.getDepartmentById(this.state.data.id).then(async (res)=>{
+    let selectedStatus = StatusService.getStatusById(this.state.data.id).then(async (res)=>{
     })
-    OrganizationalDepartmentService.updateOrganizationalDepartment(this.state.data, selectedDepartment)
+    StatusService.updateStatus(this.state.data, selectedStatus)
     .then(async res=>{
         this.setState({
             data:res.data,
-            alert: {'hidden': false, 'message': "Успешно уреден оддел!", 'type': 'success'},
+            alert: {'hidden': false, 'message': "Успешно уреден статус на поднесена задача!", 'type': 'success'},
         })
         await sleep(800);
         this.setState({
@@ -66,7 +65,7 @@ export default class OrganizationalDepartmentEdit extends Component{
     .catch( async error=>{
         if (error.message === "Request failed with status code 500") {
             this.setState({
-                alert: {'hidden': false, 'message': "Неуспешно уреден оддел!", 'type': 'error'},
+                alert: {'hidden': false, 'message': "Неуспешно уреден статус на поднесена задача!", 'type': 'error'},
             })
             await sleep(4000);
             this.setState({
@@ -83,14 +82,14 @@ export default class OrganizationalDepartmentEdit extends Component{
         return (
                    
                    <Dialog open={this.state.open} onClose={this.handleClose}>
-                        <DialogTitle>Уреди оддел</DialogTitle>
+                        <DialogTitle>Уреди статус</DialogTitle>
                         <DialogContent>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
                             name="name"
-                            label="Име на оддел"
+                            label="Име на статус"
                             type="text"
                             value={data.name}
                             onChange={this.handleChange}
@@ -103,23 +102,9 @@ export default class OrganizationalDepartmentEdit extends Component{
                             margin="dense"
                             id="label"
                             name="label"
-                            label="Лабела на оддел"
+                            label="Лабела на статус"
                             type="text"
                             value={data.label}
-                            onChange={this.handleChange}
-                            fullWidth
-                            variant="standard"
-                            required
-                            />
-                            
-                            <TextField
-                            autoFocus
-                            margin="dense"
-                            id="code"
-                            name="code"
-                            label="Код на оддел"
-                            type="text"
-                            value={data.code}
                             onChange={this.handleChange}
                             fullWidth
                             variant="standard"

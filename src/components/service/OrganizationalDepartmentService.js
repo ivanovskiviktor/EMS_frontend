@@ -5,7 +5,7 @@ import instance from '../instance/instance';
 const OrganizationalDepartmentService ={
     getDepartmentsPageable:(page,pageSize)=>{
         const role = localStorage.getItem("ROLES");
-         if (role === "ROLE_ADMIN" || role === "ROLE_SUPERVISOR") {
+         if (role === "ROLE_ADMIN") {
         return instance.get(`/rest/orgdepartment/get/${page}/${pageSize}`)
          } else {
              const loggedUser = localStorage.getItem("loggedUserId");

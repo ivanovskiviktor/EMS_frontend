@@ -54,14 +54,14 @@ export const SideBarDataAdmin = [
 
   {
     title: "Работни задачи",
-    path: "#",
+    path: "/workingTasks",
     icon: <FaIcons.FaTasks/>,
     cName: "nav-text"
   },
 
   {
     title: "Статуси",
-    path: "#",
+    path: "/statuses",
     icon: <BsIcons.BsPencilSquare/>,
     cName: "nav-text"
   },

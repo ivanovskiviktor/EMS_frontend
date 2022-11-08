@@ -35,7 +35,7 @@ export default class Login extends Component {
           .then((res) => {
             localStorage.setItem("ROLES", res.data.roles);
             localStorage.setItem("loggedUserId", res.data.id);
-            window.location.href = "/dashboard";
+            window.location.href = "/orgDepartments";
           })
           .finally();
       })

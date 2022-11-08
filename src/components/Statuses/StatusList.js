@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from "react";
 import NavBar from "../shared/components/NavBar/NavBar";
 import Button from '@mui/material/Button';
-import OrganizationalDepartmentService from "../service/OrganizationalDepartmentService";
-import OrganizationalDepartmentEdit from "./OrganizationalDepartmentEdit";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEdit, faPlusCircle} from "@fortawesome/free-solid-svg-icons";
+import StatusService from "../service/StatusService";
+import StatusEdit from "./StatusEdit";
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -34,7 +34,7 @@ import {
 
 
 
-export default class OrganizationalDepartmentList extends Component{
+export default class StatusList extends Component{
 
     constructor(props){
         super(props)
@@ -42,10 +42,9 @@ export default class OrganizationalDepartmentList extends Component{
         this.state = {
             data: {
             name: "",
-            label: "",
-            code: ""
+            label: ""
             },
-            departments: [],
+            statuses: [],
             page: 0,
             rowsPerPage: 5,
             totalElements: 0,
@@ -57,17 +56,16 @@ export default class OrganizationalDepartmentList extends Component{
 
     handleSubmit = (e) => {
         e.preventDefault();
-             OrganizationalDepartmentService.addOrganizationalDepartment(this.state.data).then(async () =>{
+            StatusService.addStatus(this.state.data).then(async () =>{
                 this.setState({
-                    alert: {'hidden': false, 'message': "Успешно додаден оддел!", 'type': 'success'},
+                    alert: {'hidden': false, 'message': "Успешно додаден статус на поднесена задача!", 'type': 'success'},
                     open:false,
                     data: {
                         name: "",
-                        code: "",
                         label: ""
                     }
                 })
-                this.getDepartmentsPageable(0,this.state.rowsPerPage);
+                this.getStatusesPageable(0,this.state.rowsPerPage);
                 await sleep(4000);
                 this.setState({
                     alert: {'hidden': true, 'message': null, 'type': 'success'},
@@ -77,7 +75,7 @@ export default class OrganizationalDepartmentList extends Component{
              .catch(async error =>{ 
                 if (error.message === "Request failed with status code 500") {
                     this.setState({
-                        alert: {'hidden': false, 'message': "Неуспешно додаден оддел!", 'type': 'error'},
+                        alert: {'hidden': false, 'message': "Неуспешно додаден статус на поднесена задача!", 'type': 'error'},
                     })
                     await sleep(4000);
                     this.setState({
@@ -88,11 +86,11 @@ export default class OrganizationalDepartmentList extends Component{
           };
     
     handleDelete = id => {
-        OrganizationalDepartmentService.deleteOrganizationalDepartment(id).then(async () => {
+        StatusService.deleteStatus(id).then(async () => {
                 this.setState({
-                    alert: {'hidden': false, 'message': "Успешно избришан оддел!", 'type': 'success'},
+                    alert: {'hidden': false, 'message': "Успешно избришан статус на поднесена задача!", 'type': 'success'},
                 })
-                this.getDepartmentsPageable(0,this.state.rowsPerPage);
+                this.getStatusesPageable(0,this.state.rowsPerPage);
                 await sleep(4000);
                 this.setState({
                     alert: {'hidden': true, 'message': null, 'type': 'success'},
@@ -101,7 +99,7 @@ export default class OrganizationalDepartmentList extends Component{
             }).catch(async error =>{ 
                 if (error.message === "Request failed with status code 500") {
                     this.setState({
-                        alert: {'hidden': false, 'message': "Неуспешно избришан оддел!", 'type': 'error'},
+                        alert: {'hidden': false, 'message': "Неуспешно избришан статус на поднесена задача!", 'type': 'error'},
                     })
                     await sleep(4000);
                     this.setState({
@@ -132,7 +130,7 @@ export default class OrganizationalDepartmentList extends Component{
         this.setState({
           page: newPage,
         })
-        this.getDepartmentsPageable(newPage, this.state.rowsPerPage);
+        this.getStatusesPageable(newPage, this.state.rowsPerPage);
       };
     
     handleChangeRowsPerPage = event => {
@@ -140,20 +138,20 @@ export default class OrganizationalDepartmentList extends Component{
           rowsPerPage: (parseInt(event.target.value, 10)),
           page: 0,
         })
-        this.getDepartmentsPageable(0, (parseInt(event.target.value, 10)));
+        this.getStatusesPageable(0, (parseInt(event.target.value, 10)));
       };
       
       
     componentDidMount() {
-        this.getDepartmentsPageable(this.state.page, this.state.rowsPerPage);  
+        this.getStatusesPageable(this.state.page, this.state.rowsPerPage);  
       }
     
 
-    getDepartmentsPageable(page,size) {
-        OrganizationalDepartmentService.getDepartmentsPageable(page, size)
+    getStatusesPageable(page,size) {
+        StatusService.getStatusesPageable(page, size)
             .then(response => response.data).then((data) => {
                 this.setState({
-                    departments: data.content,
+                    statuses: data.content,
                     totalElements: data.totalElements,
                     spinner: false
                 });
@@ -168,7 +166,7 @@ render() {
         <Fragment>
             <NavBar/>
             <br/>
-            <h2 style={{marginTop:"2rem"}}>Оддели</h2>
+            <h2 style={{marginTop:"2rem"}}>Статуси</h2>
             <br/><br/><br/>
             <Alert
               className="m-3"
@@ -186,20 +184,19 @@ render() {
                   <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                     <TableRow>
                       <TableCell width="18%">#</TableCell>
-                      <TableCell width="18%">Име</TableCell>
-                      <TableCell width="18%">Лабела</TableCell>
-                      <TableCell width="18%">Код</TableCell>
+                      <TableCell width="27%">Име</TableCell>
+                      <TableCell width="27%">Лабела</TableCell>
                       <TableCell width="30%" align="right">
-                        <button type="button" class="btn btn-success" onClick={this.handleClickOpen}><FontAwesomeIcon icon={faPlusCircle}/> <span className="btn-wrapper--label">Додади оддел</span> </button>
+                        <button type="button" class="btn btn-success" onClick={this.handleClickOpen}><FontAwesomeIcon icon={faPlusCircle}/> <span className="btn-wrapper--label">Додади статус</span> </button>
                         <Dialog open={this.state.open} onClose={this.handleClose}>
-                        <DialogTitle>Додади оддел</DialogTitle>
+                        <DialogTitle>Додади статус</DialogTitle>
                         <DialogContent>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
                             name="name"
-                            label="Име на оддел"
+                            label="Име на статус"
                             value={this.state.data.name}
                             type="text"
                             onChange={this.handleChange}
@@ -212,22 +209,8 @@ render() {
                             margin="dense"
                             id="label"
                             name="label"
-                            label="Лабела на оддел"
+                            label="Лабела на статус"
                             value={this.state.data.label}
-                            type="text"
-                            onChange={this.handleChange}
-                            fullWidth
-                            variant="standard"
-                            required
-                            />
-                            
-                            <TextField
-                            autoFocus
-                            margin="dense"
-                            id="code"
-                            name="code"
-                            label="Код на оддел"
-                            value={this.state.data.code}
                             type="text"
                             onChange={this.handleChange}
                             fullWidth
@@ -244,20 +227,19 @@ render() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {(this.state.departments).map((row, index) =>
+                    {(this.state.statuses).map((row, index) =>
                       (
                         <TableRow key={row.id}>
                           <TableCell>{row.id}</TableCell>
                           <TableCell>{row.name}</TableCell>
                           <TableCell>{row.label}</TableCell>
-                          <TableCell>{row.code}</TableCell>
                           <TableCell><button type="button" onClick={е=>confirmAlert({
                           customUI: ({ onClose }) => {
                 return (
                     
 
-                <OrganizationalDepartmentEdit departments={this.state.departments} department={row} onSave={() => {
-                                     this.getDepartmentsPageable(this.state.page,this.state.rowsPerPage); 
+                <StatusEdit statuses={this.state.statuses} status={row} onSave={() => {
+                                     this.getStatusesPageable(this.state.page,this.state.rowsPerPage); 
                                      onClose();
                                 }} />
                               
