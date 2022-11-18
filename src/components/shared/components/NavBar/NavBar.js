@@ -7,7 +7,7 @@ import {FiUserCheck} from "react-icons/fi";
 import { IconContext } from "react-icons";
 import { SideBarData } from "./SideBarData";
 import { SideBarDataAdmin } from "./SideBarDataAdmin";
-
+// import {logo} from "../../../../images/application-logo.png";
 
 import './NavBar.css';
 
@@ -60,7 +60,7 @@ export default class NavBar extends Component {
               <FaIcons.FaBars onClick={this.showSidebar} />
             </Link>
             <Link to="#" className="menu-bars">
-            <img src={require('../../../../images/application-logo.png')} style={{width:'50px', marginTop:'10px'}} />
+            {/* <img src={require('../../../../images/application-logo.png')} style={{width:'50px', marginTop:'10px'}} /> */}
             </Link>
             <Link to="#" className="menu-bars">
             <label style={{fontSize:'20px',marginLeft:'1550px', color:"white"}}><FiUserCheck style={{width:"25px", height:"30px", marginTop:'-3px'}}/> {this.state.email}</label>

@@ -2,10 +2,14 @@ import axios from 'axios';
 import instance from '../instance/instance';
 
 
-const OrganizationalDepartmentService ={
+const WorkingTaskService ={
     
     getWorkingItemsPageable:(page,pageSize)=>{
         return instance.get(`/rest/workingItem/get/${page}/${pageSize}`)
+    },
+
+    getWorkingTasksNotPageable:()=>{
+        return instance.get(`/rest/workingItem/all`);
     },
 
     getWorkingItemById:(id)=>{
@@ -32,8 +36,10 @@ const OrganizationalDepartmentService ={
 
     deleteWorkingItem:(id)=>{
         return instance.delete(`/rest/workingItem/delete/${id}`);
-    }
+    },
 
-
+    saveTasks:(tasks) => {
+        return instance.post("/rest/orgDepartmentWorkingItem/create", tasks)
+      }
 }
-export default OrganizationalDepartmentService;
+export default WorkingTaskService;

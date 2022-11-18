@@ -34,7 +34,7 @@ import {
 
 
 
-export default class StatusList extends Component{
+export default class StatusList extends Component {
 
     constructor(props){
         super(props)

@@ -30,7 +30,7 @@ export const SideBarData = [
 
   {
     title: "Забелешки",
-    path: "#",
+    path: "/notes",
     icon: <FaIcons.FaEnvelopeOpenText />,
     cName: "nav-text"
   }

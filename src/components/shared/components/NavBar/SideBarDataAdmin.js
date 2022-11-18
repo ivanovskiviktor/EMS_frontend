@@ -33,14 +33,14 @@ export const SideBarDataAdmin = [
 
   {
     title: "Забелешки",
-    path: "#",
+    path: "/notes",
     icon: <FaIcons.FaEnvelopeOpenText />,
     cName: "nav-text"
   },
 
   {
     title: "Администрација",
-    path: "#",
+    path: "/administration",
     icon: <RiIcons.RiAdminFill/>,
     cName: "nav-text"
   },
@@ -68,8 +68,8 @@ export const SideBarDataAdmin = [
 
   {
     title: "Промени оддел",
-    path: "#",
+    path: "/modifyDepartment",
     icon: <BsIcons.BsPlusCircle/>,
     cName: "nav-text"
-  }
+  } 
 ];
