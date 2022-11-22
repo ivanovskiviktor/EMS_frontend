@@ -1,5 +1,6 @@
 .card {
     border-radius: 1rem;
+    background-color: ghostwhite;
 }
 
 .img-fluid {
@@ -14,4 +15,8 @@
 
 .paragraph, .link {
     color: #393f81;
+}
+
+#whole {
+    background-image: linear-gradient(to bottom left,#393f81,ghostwhite,white);
 }

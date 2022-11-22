@@ -238,8 +238,8 @@ render() {
                             />
                         </DialogContent>
                         <DialogActions>
-                        <Button onClick={this.handleClose}>Oткажи</Button>
-                        <Button type="submit" onClick={this.handleSubmit}>Додади</Button>
+                        <Button color="error" onClick={this.handleClose}>Oткажи</Button>
+                        <Button type="submit" color="success" onClick={this.handleSubmit}>Додади</Button>
                         </DialogActions>
                         </Dialog>
                       </TableCell>

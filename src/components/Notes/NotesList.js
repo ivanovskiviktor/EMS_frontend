@@ -126,7 +126,7 @@ export default class NotesList extends Component {
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                            <Button onClick={this.handleClose}>Затвори</Button>
+                            <Button color="error" onClick={this.handleClose}>Затвори</Button>
                             </DialogActions>
                             </Dialog>
                            )}</TableCell>

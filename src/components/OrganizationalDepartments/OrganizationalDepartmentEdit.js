@@ -127,8 +127,8 @@ export default class OrganizationalDepartmentEdit extends Component{
                             />
                         </DialogContent>
                         <DialogActions>
-                        <Button onClick={this.handleClose}>Oткажи</Button>
-                        <Button type="submit" onClick={this.handleSubmit}>Уреди</Button>
+                        <Button color="error" onClick={this.handleClose}>Oткажи</Button>
+                        <Button color="success" type="submit" onClick={this.handleSubmit}>Уреди</Button>
                         </DialogActions>
                         <Alert
                         className="m-3"

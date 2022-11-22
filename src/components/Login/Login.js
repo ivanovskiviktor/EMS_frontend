@@ -7,6 +7,7 @@ import LoginIcon from "@mui/icons-material/Login.js";
 import Alert from '@mui/material/Alert';
 import "./Login.css";
 import AuthenticationService from "../service/AuthenticationService.js";
+import { Buffer } from 'buffer';
 
 export default class Login extends Component {
   state = {
@@ -35,7 +36,7 @@ export default class Login extends Component {
           .then((res) => {
             localStorage.setItem("ROLES", res.data.roles);
             localStorage.setItem("loggedUserId", res.data.id);
-            window.location.href = "/orgDepartments";
+            window.location.href = "/dashboard";
           })
           .finally();
       })
@@ -54,7 +55,7 @@ export default class Login extends Component {
     let data2 = data.email + ":" + data.password;
     let k = data2.split(":");
     return (
-      <div>
+      <div id="whole">
         <section class="vh-100">
           <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">

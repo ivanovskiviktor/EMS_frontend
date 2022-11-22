@@ -15,3 +15,7 @@
 .paragraph, .link {
     color: #393f81;
 }
+
+#whole {
+    background-image: linear-gradient(to bottom left,#3288b1,ghostwhite,white);
+}

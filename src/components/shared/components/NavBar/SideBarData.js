@@ -9,14 +9,14 @@ import * as IoIcons from "react-icons/io";
 export const SideBarData = [
   {
     title: "Kонтролна табла",
-    path: "#",
+    path: "/dashboard",
     icon: <MdIcons.MdSpaceDashboard/>,
     cName: "nav-text"
   },
 
   {
     title: "Завршени задачи",
-    path: "#",
+    path: "/finishedWorkingTasks",
     icon: <AiIcons.AiOutlineFileDone />,
     cName: "nav-text"
   },

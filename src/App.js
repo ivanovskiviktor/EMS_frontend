@@ -10,6 +10,8 @@
   import Administration from './components/Administration/Administration';
   import UsersHead from './components/Administration/UsersHead';
   import UsersDepartments from './components/Administration/UsersDepartments';
+  import Dashboard from './components/Dashboard/Dashboard';
+  import FinishedWorkingTasksList from './components/FinishedWorkingTasks/FinishedWorkingTasksList';
   import NotesList from './components/Notes/NotesList';
   import {
     BrowserRouter as Router,
@@ -39,6 +41,8 @@
                     <Route exact path="/administration" component={Administration}/>
                     <Route exact path="/UsersHead/:id" component={UsersHead} />
                     <Route exact path="/UsersDepartments/:id" component={UsersDepartments} />
+                    <Route exact path="/dashboard" component={Dashboard}/>
+                    <Route exact path="/finishedWorkingTasks" component={FinishedWorkingTasksList}/>
                     <Route exact path="/notes" component={NotesList}/>
             </Switch>
 

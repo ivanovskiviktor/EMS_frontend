@@ -12,14 +12,14 @@ import * as CgIcons from 'react-icons/cg';
 export const SideBarDataAdmin = [
   {
     title: "Kонтролна табла",
-    path: "#",
+    path: "/dashboard",
     icon: <MdIcons.MdSpaceDashboard/>,
     cName: "nav-text"
   },
 
   {
     title: "Завршени задачи",
-    path: "#",
+    path: "/finishedWorkingTasks",
     icon: <AiIcons.AiOutlineFileDone />,
     cName: "nav-text"
   },

@@ -5,6 +5,11 @@ const StatusService ={
     getStatusesPageable:(page,pageSize)=>{
         return instance.get(`/rest/status/all/${page}/${pageSize}`)
     },
+
+    getStatusesNotPageable:()=>{
+        return instance.get(`/rest/status/all`)
+    },
+
     getStatusById:(id)=>{
         return instance.get(`rest/status/get/${id}`)
     },

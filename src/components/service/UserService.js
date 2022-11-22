@@ -19,6 +19,10 @@ const UserService = {
         });
     },
 
+    getUserDetails: () => {
+      return instance.get("/rest/user/getUserDetails");
+    },
+
     getAllHeadInOrganization:(id)=>{
         return instance.get(`/rest/user/getAllHeadInOrganization/${id}`)
       },
@@ -65,9 +69,11 @@ const UserService = {
       
       removeHeadUserForUser:(headUserHelper) => {
         return instance.post(`/rest/user/removeHeadUserFromUser`, headUserHelper); 
+      },
+
+      getAllApprovedUsersByLoggedHeadUser:() => {
+        return instance.get(`rest/user/getAllApprovedUsersByLoggedHeadUser`);
       }
-  
-  
     } 
     export default UserService;
   

@@ -201,23 +201,23 @@ export default class Administration extends Component{
                   <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                     <TableRow>
                       <TableCell width="2%">#</TableCell>
-                      <TableCell width="12.25%">Е-маил адреса</TableCell>
+                      <TableCell width="12.25%">Одобри корисник</TableCell>
                       <TableCell width="12.25%">Име</TableCell>
                       <TableCell width="12.25%">Презиме</TableCell>
-                      <TableCell width="12.25%">Одобри корисник</TableCell>
+                      <TableCell width="12.25%">Е-маил адреса</TableCell>
                       <TableCell width="12.25%">Улога</TableCell>
                       <TableCell width="12.25%">Преглед на раководител</TableCell>
                       <TableCell width="12.25%">Преглед на oддели</TableCell>
                     </TableRow>
                     <TableRow style={{backgroundColor:"#B6B9DC"}}>
                       <TableCell width="2%"></TableCell>
-                      <TableCell width="12.25%">
-                      <SearchBar handleSearch={this.handleSearch} id="email"/></TableCell>
+                      <TableCell width="12.25%"></TableCell>
                       <TableCell width="12.25%">
                       <SearchBar handleSearch={this.handleSearch} id="firstName"/></TableCell>
                       <TableCell width="12.25%">
                       <SearchBar handleSearch={this.handleSearch} id="lastName"/></TableCell>
-                      <TableCell width="12.25%"></TableCell>
+                      <TableCell width="12.25%">
+                      <SearchBar handleSearch={this.handleSearch} id="email"/></TableCell>
                       <TableCell width="12.25%"></TableCell>
                       <TableCell width="12.25%"></TableCell>
                       <TableCell width="12.25%"></TableCell>     
@@ -228,9 +228,6 @@ export default class Administration extends Component{
                   (
                     <TableRow key={user.id}>
                     <TableCell>{user.id}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.firstName}</TableCell>
-                    <TableCell>{user.lastName}</TableCell>
                     <TableCell>{user.enabled && (
                         <button type="button" class="btn btn-success" onClick={() => this.disableUser(user.id)}>
                             <FontAwesomeIcon icon={faPlusCircle}/></button>
@@ -239,6 +236,9 @@ export default class Administration extends Component{
                         <button type="button" class="btn btn-danger" onClick={() => this.enableUser(user.id)}><FontAwesomeIcon icon={faMinusCircle}/></button>
                     )}
                     </TableCell>
+                    <TableCell>{user.firstName}</TableCell>
+                    <TableCell>{user.lastName}</TableCell>
+                    <TableCell>{user.email}</TableCell>
                     <TableCell>{user.isHead &&  (
                         <button type="button" class="btn btn-info" onClick={() => this.setLoggedUserAsEmployee(user.id)}>
                         <FontAwesomeIcon icon={faPerson}/><span className="btn-wrapper--label">Раководител</span></button>)}
