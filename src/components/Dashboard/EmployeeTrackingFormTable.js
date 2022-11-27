@@ -36,7 +36,13 @@ import CreateReport from "../Reports/CreateReport";
 import {sleep} from "../shared/functions/Sleep";
 import EmployeeTrackingFormPreview from "./EmployeeTrackingFormPreview";
 import UpdateClosedTask from "./UpdateClosedTask";
-
+import CloseTask from "./CloseTask";
+import Select from "react-select";
+import SearchBar from "../shared/components/SearchBar/SearchBar"; 
+import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
 export default class EmployeeTrackingFormTable extends Component{
@@ -59,23 +65,11 @@ export default class EmployeeTrackingFormTable extends Component{
             description: ""
           },
           employeeTrackingFormHelper: {
-            // workingItemName: "Работна задача",
-            // reportId: null,
-            // taskStartDate: null,
-            // startDate:null,
-            // endDate:null,
-            // taskEndDate: null,
-            // title: null,
-            // reportDescription: null,
-            // valueId: null,
-            // organizationalDepartmentId: null,
-            // organizationalDepartmentName: "Орг. е.",
-            // statusId: null,
-            // firstName: null,
-            // lastName: null,
-            // workingItemId: null,
-            // hours: null,
-            // minutes: 0,
+            startDate: null,
+            endDate: null,
+            title: null,
+            submitterFirstNameLastName: null,
+            organizationalDepartmentId: null,
             description: null
           },
           orgDepartmentId: null,
@@ -83,7 +77,7 @@ export default class EmployeeTrackingFormTable extends Component{
         };
       }
 
-      getColor(endTaskDate) {
+      colorRow(endTaskDate) {
         if (endTaskDate !== null) {
           var endDate = new Date(endTaskDate);
           var data = new Date();
@@ -284,7 +278,6 @@ export default class EmployeeTrackingFormTable extends Component{
           }
         };
 
-
           async componentDidMount() {
             let id = localStorage.getItem("loggedUserId");
             await this.getWorkingTasks();
@@ -308,11 +301,80 @@ export default class EmployeeTrackingFormTable extends Component{
               })
          }
 
-      
+         handleSearch = (id, value) => {
+     
+          let newFilter = {
+              ...this.state.employeeTrackingFormHelper,
+          }
+          newFilter[id] = value;
+          
+          if(this.state.tableForFinishedTasks) {
+            this.getFinishedTasksFilterable(0, this.state.rowsPerPage, newFilter)
+          } else {
+          this.getTasksFilterable(0, this.state.rowsPerPage, newFilter)
+          }
+          this.setState({
+              employeeTrackingFormHelper: newFilter
+          })
+  
+      }
+
+      handleChangeSelect = (e) => {
+        let date = new Date();
+        this.setState({
+            employeeTrackingFormHelper: {
+            ...this.state.employeeTrackingFormHelper,
+            [e.name]: e.value || null,
+        },
+        }, 
+        () => {
+          if(this.state.tableForFinishedTasks) {
+            this.getFinishedTasksFilterable(0, this.state.rowsPerPage, this.state.employeeTrackingFormHelper)
+          } else {
+          this.getTasksFilterable(0, this.state.rowsPerPage, this.state.employeeTrackingFormHelper);
+        }
+      }
+        );
+      }
+
+      handleChangeStartDate = (newValue) => {
+        this.setState({
+            employeeTrackingFormHelper: {
+                ...this.state.employeeTrackingFormHelper,
+                startDate: newValue.$d
+            }
+        },
+        () => {
+          if(this.state.tableForFinishedTasks) {
+            this.getFinishedTasksFilterable(0, this.state.rowsPerPage, this.state.employeeTrackingFormHelper)
+          } else {
+          this.getTasksFilterable(0, this.state.rowsPerPage, this.state.employeeTrackingFormHelper);
+        }
+        })
+    };
+
+    handleChangeEndDate = (newValue) => {
+      this.setState({
+          employeeTrackingFormHelper: {
+              ...this.state.employeeTrackingFormHelper,
+              endDate: newValue.$d
+          }
+      },
+      () => {
+        if(this.state.tableForFinishedTasks) {
+          this.getFinishedTasksFilterable(0, this.state.rowsPerPage, this.state.employeeTrackingFormHelper)
+        } else {
+        this.getTasksFilterable(0, this.state.rowsPerPage, this.state.employeeTrackingFormHelper);
+      }
+      })
+  };
+
+
 
     render() {
         const { tasks, employeeTrackingFormHelper, noteHelper } = this.state;
         let role = localStorage.getItem("ROLES");
+        let loggedUserId = localStorage.getItem("loggedUserId");
         if(role !== "ROLE_ADMIN"){
         return (
             <Fragment>
@@ -341,13 +403,13 @@ export default class EmployeeTrackingFormTable extends Component{
                 <Table className="table-striped table-hover" aria-label="simple table">
                   <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                   <TableRow>
+                      <TableCell width="10%">Статус</TableCell>
                       <TableCell width="18%">Име на активност</TableCell>
                       <TableCell width="12%">Опис</TableCell>
                       <TableCell width="10%">Оддел</TableCell>
                       <TableCell width="15%">Име и презиме</TableCell>
                       <TableCell width="10%">Почетен датум</TableCell>
                       <TableCell width="10%">Краен датум</TableCell>
-                      <TableCell width="10%">Статус</TableCell>
                       {!this.state.tableForFinishedTasks && (
                       <TableCell width="15%" align="right">
                       <button type="submit" class="btn btn-success" onClick={() => { this.showForm(); }}><FontAwesomeIcon icon={faPlusCircle}/> <span className="btn-wrapper--label">Додади форма</span> </button>
@@ -355,6 +417,61 @@ export default class EmployeeTrackingFormTable extends Component{
                       {this.state.tableForFinishedTasks && (
                         <TableCell width="15%"></TableCell>
                       )}
+                    </TableRow>
+                      <TableRow style={{backgroundColor:"#B6B9DC"}}>
+                      <TableCell width="10%"></TableCell>
+                      <TableCell width="18%">
+                      <SearchBar handleSearch={this.handleSearch} id="title"/></TableCell>
+                      <TableCell width="12%">
+                      <SearchBar handleSearch={this.handleSearch} id="description"/></TableCell>
+                      <TableCell width="10%">
+                      <Select placeholder={this.state.departments[0]?.code} className="form-control" id="departments" onChange={this.handleChangeSelect}
+                                    options={this.state.departments.map((department) => (
+                                        { value: department.id, label: department.code, name: "organizationalDepartmentId" }
+                                    ))}
+                                    styles={{
+                                        control: (provided) => ({
+                                        ...provided,
+                                        boxShadow: "none",
+                                        border: "none",
+                                        height: "10px"
+                                        }),
+                                        valueContainer: (provided, state) => ({
+                                          ...provided,
+                                          height: '34px'
+                                        }),
+                                    
+                                    }}>
+                                    </Select>
+                      </TableCell>
+                      <TableCell width="15%">
+                      <SearchBar handleSearch={this.handleSearch} id="submitterFirstNameLastName"/></TableCell>
+                      <TableCell width="10%">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                id="taskStartDate"  
+                                name="taskStartDate"
+                                value={dateFormat(this.state.employeeTrackingFormHelper.startDate, "mm/dd/yyyy")}
+                                onChange={this.handleChangeStartDate}
+                                renderInput={(params) => <TextField {...params} fullWidth sx={{ backgroundColor: 'white' }}
+                                />}/>
+                      </LocalizationProvider></TableCell>
+                      {this.state.tableForFinishedTasks && 
+                      <TableCell width="10%">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                id="taskEndDate"  
+                                name="taskEndDate"
+                                value={dateFormat(this.state.employeeTrackingFormHelper.endDate, "mm/dd/yyyy")}
+                                onChange={this.handleChangeEndDate}
+                                renderInput={(params) => <TextField {...params} fullWidth sx={{ backgroundColor: 'white' }}
+                                />}/>
+                      </LocalizationProvider></TableCell>
+                      }
+                      {!this.state.tableForFinishedTasks &&
+                      <TableCell width="10%"></TableCell>
+                      }
+                      <TableCell width="15%"></TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -364,7 +481,8 @@ export default class EmployeeTrackingFormTable extends Component{
                       </TableRow>
                     )}
                     {(this.state.tasks).map((task, index) =>
-                      <TableRow key={task.id}>
+                      <TableRow key={task.id} style={{ backgroundColor: this.colorRow(task.endDate) }}>
+                        <TableCell>{task.statusName}</TableCell>
                         <TableCell>{task.title && task.title.length <= 30 ? <b>{task.title}</b> : 
                           `${task.title.substring(0,30)}`}
                           {task.title.length > 30 && (<a style={{cursor: "cell"}} 
@@ -405,7 +523,6 @@ export default class EmployeeTrackingFormTable extends Component{
                         <TableCell>{task.creatorName} {task.creatorSurname}</TableCell>
                         <TableCell>{dateFormat(task.startDate, "dd/mm/yyyy")}</TableCell>
                         <TableCell>{task.endDate !== null ? dateFormat(task.endDate, "dd/mm/yyyy") : ""}</TableCell>
-                        <TableCell>{task.statusName}</TableCell>
                         {this.state.tableForFinishedTasks && (
                           <TableCell>
                             <button type="submit" class="btn btn-warning" onClick={е=>confirmAlert({
@@ -446,19 +563,23 @@ export default class EmployeeTrackingFormTable extends Component{
                         )}
                         {!this.state.tableForFinishedTasks && (
                           <TableCell>
-                            <button type="button" class="btn btn-success" onClick={this.handleClickOpen}><FontAwesomeIcon icon={faCheck}/></button>&nbsp;&nbsp;
-                            <Dialog open={this.state.open} onClose={this.handleClose}>
-                        <DialogTitle>Дали сте сигурни дека сакате да ја затворите тековната задача?</DialogTitle>
-                        <DialogContent>
-                        <DialogContentText>
-                          Со затворање на тековната задача, нејзиниот краен датум ќе се постави на денешниот.
-                        </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                        <Button color="error" onClick={this.handleClose}>Oткажи</Button>
-                        <Button color="success" type="button" onClick={() => this.closeTask(task.id)}>Затвори задача</Button>
-                        </DialogActions>
-                        </Dialog>
+                            <button type="button" class="btn btn-success" onClick={е=>confirmAlert({
+                          customUI: ({ onClose }) => {
+                          return (
+                          <CloseTask task={task} onCloseTask={() => {
+                            this.getTasksFilterable(this.state.page, this.state.rowsPerPage);
+                          }}
+                            onClose={() => {
+                            onClose();
+                            this.getTasksFilterable(this.state.page, this.state.rowsPerPage); }} />       
+                             );
+                          },
+                          closeOnEscape: true,
+                          closeOnClickOutside: false,
+                          willUnmount: () => {},
+                          afterClose: () => {},
+                          onClickOutside: () => {},
+                          onKeypressEscape: () => {}})}><FontAwesomeIcon icon={faCheck}/></button>&nbsp;&nbsp;
                         <button type="button" class="btn btn-warning" onClick={е=>confirmAlert({
                           customUI: ({ onClose }) => {
                           return (
@@ -475,7 +596,7 @@ export default class EmployeeTrackingFormTable extends Component{
                           onClickOutside: () => {},
                           onKeypressEscape: () => {}})}><FontAwesomeIcon icon={faEdit}/></button>&nbsp;&nbsp;
                         <DeleteDialog handleDelete={() => this.deleteTask(task.id)}/>&nbsp;&nbsp;
-                        <button type="button" class={task.hasReport ? "btn btn-danger disabled" : "btn btn-success"} onClick={е=>confirmAlert({
+                        <button type="button" class={task.hasReport && task.creatorId !== loggedUserId ? "btn btn-danger" : "btn btn-success"} onClick={е=>confirmAlert({
                           customUI: ({ onClose }) => {
                           return (
                           <CreateReport task={task.id} report={task.reportId} title={task.title}
@@ -519,9 +640,115 @@ export default class EmployeeTrackingFormTable extends Component{
         );
         } else {
             return (
-                <div>
-                    <h2>head</h2>
-                </div>
+              <Fragment>
+              <br/>
+               <div>
+               <button type="submit" style={{display:"inline-block", float: "left", marginLeft:"0.5rem"}} class="btn btn-success" onClick={this.exportForms}>
+                <FontAwesomeIcon icon={faFileExport}/> <span className="btn-wrapper--label">Превземи форми</span></button>
+               </div><br/>
+               <TableContainer className="mt-4" component={Paper}>
+                <Table className="table-striped table-hover" aria-label="simple table">
+                  <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
+                  <TableRow>
+                      <TableCell width="18%">Име на активност</TableCell>
+                      <TableCell width="12%">Опис</TableCell>
+                      <TableCell width="10%">Оддел</TableCell>
+                      <TableCell width="15%">Име и презиме</TableCell>
+                      <TableCell width="10%">Почетен датум</TableCell>
+                      <TableCell width="10%">Краен датум</TableCell>
+                      <TableCell width="10%">Статус</TableCell>
+                        <TableCell width="15%"></TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {tasks.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема {this.state.tableForFinishedTasks ? "завршени" : "тековни"} форми на задачи</TableCell>
+                      </TableRow>
+                    )}
+                    {(this.state.tasks).map((task, index) =>
+                      <TableRow key={task.id} style={{ backgroundColor: this.colorRow(task.endDate) }}>
+                        <TableCell>{task.title && task.title.length <= 30 ? <b>{task.title}</b> : 
+                          `${task.title.substring(0,30)}`}
+                          {task.title.length > 30 && (<a style={{cursor: "cell"}} 
+                          onClick={this.handleClickOpen}>...&nbsp;<FontAwesomeIcon icon={faPlus}/></a>)}
+                          {task.title.length > 30 && ( 
+                            <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description">
+                            <DialogTitle id="alert-dialog-title"> {"Целосно име на задачата од поднесената форма"} </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                  <b>{task.title}</b>
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                            <Button color="error" onClick={this.handleClose}>Затвори</Button>
+                            </DialogActions>
+                            </Dialog>
+                           )}</TableCell>
+                        <TableCell>{task.employeeTrackingFormDescription && task.employeeTrackingFormDescription.length <= 20 ? task.employeeTrackingFormDescription : 
+                          `${task.employeeTrackingFormDescription.substring(0,20)}`}
+                          {task.employeeTrackingFormDescription.length > 20 && (<a style={{cursor: "cell"}} 
+                          onClick={this.handleClickOpen}>...&nbsp;<FontAwesomeIcon icon={faPlus}/></a>)}
+                          {task.employeeTrackingFormDescription.length > 20 && ( 
+                            <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description">
+                            <DialogTitle id="alert-dialog-title"> {"Целосен опис на задачата од поднесената форма"} </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                  {task.employeeTrackingFormDescription}
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                            <Button color="error" onClick={this.handleClose}>Затвори</Button>
+                            </DialogActions>
+                            </Dialog>
+                           )}</TableCell>
+                        <TableCell>{task.organizationalDepCode}</TableCell>
+                        <TableCell>{task.creatorName} {task.creatorSurname}</TableCell>
+                        <TableCell>{dateFormat(task.startDate, "dd/mm/yyyy")}</TableCell>
+                        <TableCell>{task.endDate !== null ? dateFormat(task.endDate, "dd/mm/yyyy") : ""}</TableCell>
+                        <TableCell>{task.statusName}</TableCell>
+                          <TableCell>
+                            <button type="submit" class="btn btn-warning" onClick={е=>confirmAlert({
+                          customUI: ({ onClose }) => {
+                          return (
+                          <EmployeeTrackingFormPreview task={task}
+                            onClose={() => {
+                            onClose();
+                            this.getFinishedTasksFilterable(this.state.page, this.state.rowsPerPage); }} />       
+                             );
+                          },
+                          closeOnEscape: true,
+                          closeOnClickOutside: false,
+                          willUnmount: () => {},
+                          afterClose: () => {},
+                          onClickOutside: () => {},
+                          onKeypressEscape: () => {}})}><FontAwesomeIcon icon={faInfoCircle}/></button>
+                          </TableCell>
+                      </TableRow>
+                    )}
+                    </TableBody>
+                    <TableFooter>
+                    <TableRow>
+                      <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        colSpan={12}
+                        count={this.state.tasks.length}
+                        rowsPerPage={this.state.rowsPerPage}
+                        page={this.state.page}
+                        SelectProps={{
+                          inputProps: {'aria-label': 'rows per page'},
+                          native: true
+                        }}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                      />
+                    </TableRow>
+                  </TableFooter>
+                    </Table>
+                    </TableContainer>
+            </Fragment>
             )
         }
     }

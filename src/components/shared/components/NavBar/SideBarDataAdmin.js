@@ -26,7 +26,7 @@ export const SideBarDataAdmin = [
 
   {
     title: "Извештаи",
-    path: "#",
+    path: "/reports",
     icon: <IoIcons.IoIosPaper />,
     cName: "nav-text"
   },
