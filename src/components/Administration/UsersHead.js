@@ -67,7 +67,6 @@
           }
 
           removeHeadUserFromUser(){
-          debugger;
           const headUserHelper={
               id:this.state.id,
               headId:null

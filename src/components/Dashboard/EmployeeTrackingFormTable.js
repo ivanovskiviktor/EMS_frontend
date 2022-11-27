@@ -17,7 +17,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import Button from '@mui/material/Button';
 import dateFormat from "dateformat";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"; 
-import {faEdit, faFileExport, faNoteSticky, faPlusCircle, faPlus, faInfoCircle, faCheck, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faEdit, faFileExport, faNoteSticky, faPlusCircle, faPlus, faInfoCircle, faCheck, faLockOpen, faFileArchive} from "@fortawesome/free-solid-svg-icons";
 import instance from "../instance/instance";
 import FileSaver from "file-saver";
 import Dialog from '@mui/material/Dialog';
@@ -28,6 +28,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import EmployeeTrackingFormService from "../service/EmployeeTrackingFormService";
 import Swal from "sweetalert2";
 import DeleteDialog from "../shared/components/Dialogs/DeleteDialog";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import EditEmployeeTrackingForm from "./EditEmployeeTrackingForm";
+import CreateNote from "../Notes/CreateNote";
+import CreateReport from "../Reports/CreateReport";
+import {sleep} from "../shared/functions/Sleep";
+import EmployeeTrackingFormPreview from "./EmployeeTrackingFormPreview";
+import UpdateClosedTask from "./UpdateClosedTask";
+
+
 
 export default class EmployeeTrackingFormTable extends Component{
 
@@ -183,7 +193,6 @@ export default class EmployeeTrackingFormTable extends Component{
              DashboardService.getTasksFilterable(page, size, this.state.employeeTrackingFormHelper)
                 .then((response) => response.data)
                 .then((data) => {
-                  console.log(data)
                   this.setState({
                     tasks: data.content,
                     totalElements: data.totalElements
@@ -210,7 +219,8 @@ export default class EmployeeTrackingFormTable extends Component{
                 } else {
                   this.getTasksFilterable(this.state.page, this.state.rowsPerPage);
                 }
-      
+                this.handleClose();
+                sleep(500);
                 Swal.fire({
                   icon: "success",
                   title: "Успешно!",
@@ -221,7 +231,7 @@ export default class EmployeeTrackingFormTable extends Component{
                 Swal.fire({
                   icon: "error",
                   title: "Грешка!",
-                  text: "Неуспешнo затворање на избраната задача!",
+                  text: "Неуспешнo затворање на избраната задача!", 
                 });
               });
         }
@@ -301,7 +311,7 @@ export default class EmployeeTrackingFormTable extends Component{
       
 
     render() {
-        const { page, rowsPerPage, tasks, employeeTrackingFormHelper, noteHelper } = this.state;
+        const { tasks, employeeTrackingFormHelper, noteHelper } = this.state;
         let role = localStorage.getItem("ROLES");
         if(role !== "ROLE_ADMIN"){
         return (
@@ -310,14 +320,28 @@ export default class EmployeeTrackingFormTable extends Component{
                <div>
                <button type="submit" style={{display:"inline-block", float: "left", marginLeft:"0.5rem"}} class="btn btn-success" onClick={this.exportForms}>
                 <FontAwesomeIcon icon={faFileExport}/> <span className="btn-wrapper--label">Превземи форми</span></button>
-               <button type="submit" style={{display:"inline-block", float: "left", marginLeft: "0.5rem"}} class="btn btn-warning">
-                <FontAwesomeIcon icon={faNoteSticky}/> <span className="btn-wrapper--label">Постави забелешка</span></button>
+                {!this.state.tableForFinishedTasks && 
+               <button type="submit" style={{display:"inline-block", float: "left", marginLeft: "0.5rem"}} class="btn btn-warning" onClick={е=>confirmAlert({
+                          customUI: ({ onClose }) => {
+                          return (
+                          <CreateNote onClose={() => {
+                            onClose();
+                            this.getTasksFilterable(this.state.page, this.state.rowsPerPage); }} />       
+                             );
+                          },
+                          closeOnEscape: true,
+                          closeOnClickOutside: false,
+                          willUnmount: () => {},
+                          afterClose: () => {},
+                          onClickOutside: () => {},
+                          onKeypressEscape: () => {}})}>
+                <FontAwesomeIcon icon={faNoteSticky}/> <span className="btn-wrapper--label">Постави забелешка</span></button>}
                </div><br/>
                <TableContainer className="mt-4" component={Paper}>
                 <Table className="table-striped table-hover" aria-label="simple table">
                   <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                   <TableRow>
-                      <TableCell width="18%">Име на задача</TableCell>
+                      <TableCell width="18%">Име на активност</TableCell>
                       <TableCell width="12%">Опис</TableCell>
                       <TableCell width="10%">Оддел</TableCell>
                       <TableCell width="15%">Име и презиме</TableCell>
@@ -384,7 +408,40 @@ export default class EmployeeTrackingFormTable extends Component{
                         <TableCell>{task.statusName}</TableCell>
                         {this.state.tableForFinishedTasks && (
                           <TableCell>
-                            <button type="submit" class="btn btn-warning"><FontAwesomeIcon icon={faInfoCircle}/></button>
+                            <button type="submit" class="btn btn-warning" onClick={е=>confirmAlert({
+                          customUI: ({ onClose }) => {
+                          return (
+                          <EmployeeTrackingFormPreview task={task}
+                            onClose={() => {
+                            onClose();
+                            this.getFinishedTasksFilterable(this.state.page, this.state.rowsPerPage); }} />       
+                             );
+                          },
+                          closeOnEscape: true,
+                          closeOnClickOutside: false,
+                          willUnmount: () => {},
+                          afterClose: () => {},
+                          onClickOutside: () => {},
+                          onKeypressEscape: () => {}})}><FontAwesomeIcon icon={faInfoCircle}/></button>&nbsp;&nbsp;&nbsp;
+                          {role === "ROLE_HEAD_OF_DEPARTMENT" && (
+                            <button type="button" class="btn btn-warning" onClick={е=>confirmAlert({
+                          customUI: ({ onClose }) => {
+                          return (
+                          <UpdateClosedTask task={task} onUpdateTask={() => {
+                            this.getFinishedTasksFilterable(this.state.page, this.state.rowsPerPage);
+                          }}
+                            onClose={() => {
+                            onClose();
+                            this.getFinishedTasksFilterable(this.state.page, this.state.rowsPerPage); }} />       
+                             );
+                          },
+                          closeOnEscape: true,
+                          closeOnClickOutside: false,
+                          willUnmount: () => {},
+                          afterClose: () => {},
+                          onClickOutside: () => {},
+                          onKeypressEscape: () => {}})}><FontAwesomeIcon icon={faLockOpen}/></button>
+                          )}
                           </TableCell>
                         )}
                         {!this.state.tableForFinishedTasks && (
@@ -402,8 +459,38 @@ export default class EmployeeTrackingFormTable extends Component{
                         <Button color="success" type="button" onClick={() => this.closeTask(task.id)}>Затвори задача</Button>
                         </DialogActions>
                         </Dialog>
-                        <button type="button" class="btn btn-warning"><FontAwesomeIcon icon={faEdit}/></button>&nbsp;&nbsp;
-                        <DeleteDialog handleDelete={() => this.deleteTask(task.id)}/>
+                        <button type="button" class="btn btn-warning" onClick={е=>confirmAlert({
+                          customUI: ({ onClose }) => {
+                          return (
+                          <EditEmployeeTrackingForm tasks={tasks} selectedTask={task} onSave={() => {
+                                     this.getTasksFilterable(this.state.page,this.state.rowsPerPage); 
+                                     onClose();
+                                }} />       
+                             );
+                          },
+                          closeOnEscape: true,
+                          closeOnClickOutside: false,
+                          willUnmount: () => {},
+                          afterClose: () => {},
+                          onClickOutside: () => {},
+                          onKeypressEscape: () => {}})}><FontAwesomeIcon icon={faEdit}/></button>&nbsp;&nbsp;
+                        <DeleteDialog handleDelete={() => this.deleteTask(task.id)}/>&nbsp;&nbsp;
+                        <button type="button" class={task.hasReport ? "btn btn-danger disabled" : "btn btn-success"} onClick={е=>confirmAlert({
+                          customUI: ({ onClose }) => {
+                          return (
+                          <CreateReport task={task.id} report={task.reportId} title={task.title}
+                            onClose={() => {
+                            onClose();
+                            this.getTasksFilterable(this.state.page, this.state.rowsPerPage); }} />       
+                             );
+                          },
+                          closeOnEscape: true,
+                          closeOnClickOutside: false,
+                          willUnmount: () => {},
+                          afterClose: () => {},
+                          onClickOutside: () => {},
+                          onKeypressEscape: () => {}})}><FontAwesomeIcon icon={faFileArchive}
+                          style={{cursor: task.hasReport ? "not-allowed" : "pointer"}}/></button>
                           </TableCell>
                         )}
                       </TableRow>

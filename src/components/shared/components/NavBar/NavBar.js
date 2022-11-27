@@ -7,8 +7,8 @@ import {FiUserCheck} from "react-icons/fi";
 import { IconContext } from "react-icons";
 import { SideBarData } from "./SideBarData";
 import { SideBarDataAdmin } from "./SideBarDataAdmin";
-// import {logo} from "../../../../images/application-logo.png";
-
+import {AiFillFolderOpen} from "react-icons/ai";
+import ReportService from "../../../service/ReportService.js";
 import './NavBar.css';
 
 
@@ -18,7 +18,8 @@ export default class NavBar extends Component {
         email: "",
         errorMessage: "",
         errorMessageVisible: false,
-        sidebar: false
+        sidebar: false,
+        notification:null
       };
 
       showSidebar = () => {
@@ -32,11 +33,23 @@ export default class NavBar extends Component {
           .get("/rest/user/getUserDetails")
           .catch(function (error) {
           });
+        this.notificationReport();
         this.setState({
           email: user.data.email,
           sidebar: this.state.sidebar
         });
       }
+
+       notificationReport() {
+         ReportService.getNumberOfNotApprovedReportsForLoggedUser()
+            .then((response) => response.data)
+            .then((data) => {
+                this.setState({
+                    notification:data
+                });
+            });
+    }
+  
 
       logOut = () => {
         this.setState({
@@ -48,8 +61,7 @@ export default class NavBar extends Component {
         window.location.href='/'
       };
     
-    
-    
+  
     render() {
         var role = localStorage.getItem("ROLES");
     return (
@@ -60,15 +72,23 @@ export default class NavBar extends Component {
               <FaIcons.FaBars onClick={this.showSidebar} />
             </Link>
             <Link to="#" className="menu-bars">
-            {/* <img src={require('../../../../images/application-logo.png')} style={{width:'50px', marginTop:'10px'}} /> */}
             </Link>
+            <div id="userMail">
+            <Link to="#" className="menu-bars1">
+            <label  style={{fontSize:'20px', color:"white"}}><FiUserCheck style={{width:"25px", height:"30px", marginTop:'-3px'}}/> {this.state.email}</label>
+            </Link>
+            {role === "ROLE_HEAD_OF_DEPARTMENT" && 
             <Link to="#" className="menu-bars">
-            <label style={{fontSize:'20px',marginLeft:'1550px', color:"white"}}><FiUserCheck style={{width:"25px", height:"30px", marginTop:'-3px'}}/> {this.state.email}</label>
-            </Link>
+            <AiFillFolderOpen/>
+              <span className="badge" style={{borderRadius:"50%",backgroundColor:"red",fontSize:"9px",padding:"4px 7px",marginTop:"-20px",marginLeft:"-16px"}}>
+                {this.state.notification}
+              </span>
+            </Link>}
             <Link to="#" className="menu-bars">
             <button type="button" onClick={this.logOut} 
             class="btn btn-primary-outline" style={{backgroundColor:"transparent", borderColor:"#ccc", color:"white"}}>Одјави се</button>
             </Link>
+            </div>
           </div>
           <nav className={this.state.sidebar ? "nav-menu active" : "nav-menu"}>
             <ul className="nav-menu-items" onClick={this.showSidebar}>

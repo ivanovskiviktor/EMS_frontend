@@ -88,7 +88,6 @@
             };
 
             handleSubmit = async (event) => {
-            debugger;
             let uIds = [];
             if (this.state.checked) {
             uIds = this.state.employeeTrackingFormHelper.userIds;

@@ -185,8 +185,6 @@ export default class Administration extends Component{
     
     render() {
         const {  spinner, loggedUserEmail } = this.state;
-
-        console.log(loggedUserEmail);
         return (
             <Fragment>
             <NavBar/>
