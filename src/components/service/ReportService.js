@@ -16,8 +16,29 @@ const ReportService ={
         });
       },
 
+      getReportsPageable:(page,pageSize, reportHelper, approvedByMe)=>{
+        return instance.post(`/rest/report/all/${page}/${pageSize}`, reportHelper,{
+            headers:{
+                'Content-Type': 'application/json',
+                'approvedByMe': approvedByMe
+            }
+        })    
+    },
+
+    timeSpentOnReportsByUser:(reportFilter) => {
+      return instance.post(`/rest/report/timeSpentOnReportsByUser`, reportFilter);
+    },
+
       getNumberOfNotApprovedReportsForLoggedUser:()=>{
         return instance.get(`/rest/report/getNumberOfNotApprovedReportsForUser`)
+    },
+
+    getNotApprovedReportsForLoggedUser:()=>{
+      return instance.get(`/rest/report/getNotApprovedReportsForLoggedUser`);
+    },
+
+    acceptReport:(reportIdsHelper)=>{
+      return instance.post(`/rest/report/acceptReport`, reportIdsHelper);
     }
 }
 export default ReportService;

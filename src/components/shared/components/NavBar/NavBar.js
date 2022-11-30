@@ -78,7 +78,7 @@ export default class NavBar extends Component {
             <label  style={{fontSize:'20px', color:"white"}}><FiUserCheck style={{width:"25px", height:"30px", marginTop:'-3px'}}/> {this.state.email}</label>
             </Link>
             {role === "ROLE_HEAD_OF_DEPARTMENT" && 
-            <Link to="#" className="menu-bars">
+            <Link to="/reports" className="menu-bars">
             <AiFillFolderOpen/>
               <span className="badge" style={{borderRadius:"50%",backgroundColor:"red",fontSize:"9px",padding:"4px 7px",marginTop:"-20px",marginLeft:"-16px"}}>
                 {this.state.notification}

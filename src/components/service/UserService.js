@@ -31,6 +31,10 @@ const UserService = {
         return instance.get(`/rest/user/getHeadUsers`);
       },
 
+      getAllUsers: () => {
+        return instance.get("rest/user/getAllUsers");
+      },
+
     getAllUsersPageable: (page, pageSize, userFilter) => {
         return instance.post(`/rest/user/get/${page}/${pageSize}`, userFilter, {
             headers: {
@@ -73,7 +77,12 @@ const UserService = {
 
       getAllApprovedUsersByLoggedHeadUser:() => {
         return instance.get(`rest/user/getAllApprovedUsersByLoggedHeadUser`);
+      },
+
+      findAllUsersWithSameOrganizationalUnitAndNotApprovedByHead:() => {
+        return instance.get(`rest/user/findAllUsersWithSameOrganizationalUnitAndNotApprovedByHead`);
       }
+  
     } 
     export default UserService;
   
