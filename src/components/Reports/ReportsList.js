@@ -22,6 +22,10 @@
         import Form from "react-bootstrap/Form";
         import { Pagination } from "@material-ui/lab";
         import Badge from "@material-ui/core/Badge";
+        import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+        import { faCheck } from "@fortawesome/free-solid-svg-icons";
+        import Checkbox from '@mui/material/Checkbox';
+        import FormControlLabel from '@mui/material/FormControlLabel';
 
         export default class ReportList extends React.Component {
 
@@ -169,7 +173,6 @@
               }
 
                 getReportsPageable(currentPage) {
-                debugger;
                 let current = currentPage - 1;
                 ReportService.getReportsPageable(current, this.state.recordPerPage, this.state.reportFilter, this.state.approvedByMe)
                 .then((response) => response.data)
@@ -273,7 +276,6 @@
             }
 
             getReportsPageableAndFilterablePageChange(currentPage) {
-              debugger;
               let obj = {
                     startDate: this.state.reportFilter.startDate,
                     endDate: null,
@@ -307,7 +309,6 @@
             }
           
             getReportsPageableAndFilterableForAdmin(currentPage) {
-              debugger;
               let obj = {
                     startDate: this.state.reportFilter.startDate,
                     endDate: null,
@@ -335,7 +336,6 @@
             }
 
             getReportsPageableAndFilterableForAdminPageChange(currentPage) {
-              debugger;
               let obj = {
                     startDate: this.state.reportFilter.startDate,
                     endDate: null,
@@ -379,7 +379,7 @@
                       ReportService.timeSpentOnReportsByUser(obj)
                         .then((response3) => response3.data)
                         .then((data3) => {
-                          this.setState({
+                          this.setState({ 
                             reportFilter: {
                               ...this.state.reportFilter,
                               submitterFirstNameLastName: data[0].person.firstName + " " + data[0].person.lastName,
@@ -442,7 +442,7 @@
                       reportIds: [],
                       approveAll: false
                     })
-                    this.getReportsPageable(1);
+                    this.getReportsPageableAndFilterable(1);
                     this.getUnapprovedReports();
                   })
                 } else {
@@ -645,7 +645,7 @@
                     <TableBody>
                     {this.state.reports.length === 0 && (
                             <TableRow>
-                              <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема поднесено извештаи</TableCell>
+                              <TableCell colSpan={12} style={{ "text-align": "center" }}>Корисникот нема поднесено извештаи за избраниот датум!</TableCell>
                             </TableRow>
                           )}
                     {(this.state.reports).map((report, index) =>
@@ -761,7 +761,7 @@
                     <TableBody>
                     {this.state.reports.length === 0 && (
                             <TableRow>
-                              <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема поднесено извештаи</TableCell>
+                              <TableCell colSpan={12} style={{ "text-align": "center" }}>Немате поднесено извештаи за избраниот датум!</TableCell>
                             </TableRow>
                           )}
                     {(this.state.reports).map((report, index) =>
@@ -897,7 +897,8 @@
                             boxShadow: "none",
                             border: "none",
                             borderBottom: "1px solid gray",
-                            marginTop: "1.1rem"
+                            marginTop: "2.5rem",
+                            marginLeft: "2rem"
                           })
                         }}
                       />)}
@@ -915,13 +916,41 @@
                       onChange={this.handleSearch}/>
                   </Form.Group>
                         </div>
+                        <div className="col-2" style={{marginTop: '3rem'}}>
+                        <FormControlLabel 
+                            control={
+                            <Checkbox checked={this.state.checked} name="tasks" id="tasks" value="tasks"
+                            onClick={() => 
+                              this.setState({ 
+                                checked: !this.state.checked, 
+                                approvedByMe: !this.state.approvedByMe
+                              },
+                              () => {
+                                if (this.state.checked === false) {
+                                  this.getAllApprovedUsersByLoggedHeadUser();
+                                }
+                                else {
+                                  this.findAllUsersWithSameOrganizationalUnitAndNotApprovedByHead();
+                                }
+                              }
+                              )}/>
+                            }
+                            label="Останати извештаи"/>
+                        </div>
                       </div>
                     </div>
                     <TableContainer className="mt-4" component={Paper}>
                     <Table className="table-striped table-hover" aria-label="simple table">
                     <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                           <TableRow>
-                              <TableCell width="2%"><input type="checkbox" style={{width: '-webkit-fill-available'}}></input></TableCell>
+                              <TableCell width="2%"><input type="checkbox" style={{width: '-webkit-fill-available'}}
+                              id="reports" name="reports" value="reports" onClick={() =>
+                                this.setState(
+                                  {
+                                    approveAll: !this.state.approveAll,
+                                  }
+                                )
+                              } onChange={this.handleSelectAll} checked={this.state.approveAll}></input></TableCell>
                               <TableCell width="9%">Поднел</TableCell>
                               <TableCell width="9%">Датум на поднесување</TableCell>
                               <TableCell width="15%">Опис на извештајот</TableCell>
@@ -930,18 +959,22 @@
                               <TableCell width="10%">Опис на активноста</TableCell>
                               <TableCell width="10%">Одобрил</TableCell>
                               <TableCell width="10%">Статус на извештај</TableCell>
-                              <TableCell width="15%"></TableCell>
+                              <TableCell width="15%"><button type="submit" class="btn btn-success" onClick={this.approveReport}><FontAwesomeIcon icon={faCheck}/> 
+                              <span className="btn-wrapper--label">Одобри извештаи</span> </button></TableCell>
                             </TableRow>
                     </TableHead>
                     <TableBody>
                     {this.state.reports.length === 0 && (
                             <TableRow>
-                              <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема поднесено извештаи</TableCell>
+                              <TableCell colSpan={12} style={{ "text-align": "center" }}>Корисникот нема поднесено извештаи за избраниот датум!</TableCell>
                             </TableRow>
                           )}
                     {(this.state.reports).map((report, index) =>
                             <TableRow key={report.id}>
-                              <TableCell width="2%">test</TableCell>
+                              <TableCell width="2%">{(report.approveByMe === false && role === "ROLE_HEAD_OF_DEPARTMENT") ? "" :
+                              report.isAccepted === true ? "" : <ul style={{ listStyleType: "none", marginTop: "1rem", marginLeft: "-1.75rem" }}>
+                              <li><input type="checkbox" style={{ cursor: "pointer" }} name={report.id} id={report.id} value={report.id} className="checkbox-reports" onChange={this.handleCheckBox}/></li>
+                              </ul>}</TableCell>
                               <TableCell>{report.submitterFirstNameLastName}</TableCell>
                               <TableCell>{report.submissionDate
                               ? dateFormat(report.submissionDate, "dd/mm/yyyy")
@@ -951,7 +984,8 @@
                               <TableCell>{report.workingItemName}</TableCell>
                               <TableCell>{report.taskDescription}</TableCell>
                               <TableCell>{report.approverFirstNameLastName ? report.approverFirstNameLastName : ""}</TableCell>
-                              {report.isAccepted ? <TableCell>Одобрен</TableCell> : <TableCell>На чекање...</TableCell>}
+                              {report.isAccepted ? <TableCell>Одобрен</TableCell> : report.approveByMe ? <TableCell>Неодобрен</TableCell> :
+                              <TableCell>На чекање...</TableCell>}
                               <TableCell></TableCell>
                             </TableRow>
                           )}
@@ -983,6 +1017,10 @@
                 />}
                   </Table>
                 </TableContainer>
+                <br/>
+                {this.state.reports.length > 0 &&
+                <span style={{position:'-webkit-sticky'}}>Вкупно поднесено време за избраниот датум: <b>{this.state.hours ? this.state.hours === 1 ? this.state.hours + " час " : this.state.hours + " часа " : ""}</b>
+                {this.state.hours && this.state.minutes ? "и ": ""}<b>{this.state.minutes ?  ""  + this.state.minutes + " минути" : ""}</b></span> }
                 </Fragment>
                 )
               }

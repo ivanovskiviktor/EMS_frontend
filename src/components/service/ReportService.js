@@ -38,7 +38,7 @@ const ReportService ={
     },
 
     acceptReport:(reportIdsHelper)=>{
-      return instance.post(`/rest/report/acceptReport`, reportIdsHelper);
+      return instance.post(`/rest/report/acceptReports`, reportIdsHelper);
     }
 }
 export default ReportService;

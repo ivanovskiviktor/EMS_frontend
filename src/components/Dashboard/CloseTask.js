@@ -28,7 +28,6 @@ export default class CloseTask extends React.Component {
     }
 
     async closeTask(taskId) {
-        debugger;
         await EmployeeTrackingFormService.closeTask(taskId)
             .then((res) => {
             this.handleClose();
