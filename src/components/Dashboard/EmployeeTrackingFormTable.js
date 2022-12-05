@@ -60,12 +60,13 @@ export default class EmployeeTrackingFormTable extends Component{
           loggUserName:null,
           workingTasks: [],
           departments: [],
+          allDepartments: [],
           statuses: [],
           noteHelper: {
             description: ""
           },
           employeeTrackingFormHelper: {
-            startDate: null,
+            startDate: this.getTodaysDateFilter(),
             endDate: null,
             title: null,
             submitterFirstNameLastName: null,
@@ -89,6 +90,16 @@ export default class EmployeeTrackingFormTable extends Component{
         } else {
           return "#ffffff";
         }
+      }
+
+      getTodaysDateFilter() {
+        var date = new Date();
+        date.setDate(date.getDate())
+        date.setMinutes(0);
+        date.setHours(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date.toISOString();
       }
 
       showForm() {
@@ -157,9 +168,19 @@ export default class EmployeeTrackingFormTable extends Component{
             .then((response) => response.data)
             .then((data) => {
               this.setState({
-                departments: data,
+                departments: data
               });
             });
+      }
+
+      getAllDepartments() {
+        OrganizationalDepartmentService.getDepartmentsNotPageable()
+        .then((response) => response.data)
+        .then((data) => {
+          this.setState({
+            allDepartments: data
+          });
+        });
       }
 
       getStatusesNotPageable() {
@@ -281,6 +302,7 @@ export default class EmployeeTrackingFormTable extends Component{
           async componentDidMount() {
             let id = localStorage.getItem("loggedUserId");
             await this.getWorkingTasks();
+            await this.getAllDepartments();
             await this.getOrganizationalDepartments(id);
             await this.getStatusesNotPageable();
             if (this.props.pageForFinishedItems === true) {
@@ -650,14 +672,69 @@ export default class EmployeeTrackingFormTable extends Component{
                 <Table className="table-striped table-hover" aria-label="simple table">
                   <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                   <TableRow>
+                      <TableCell width="10%">Статус</TableCell>
                       <TableCell width="18%">Име на активност</TableCell>
                       <TableCell width="12%">Опис</TableCell>
                       <TableCell width="10%">Оддел</TableCell>
                       <TableCell width="15%">Име и презиме</TableCell>
                       <TableCell width="10%">Почетен датум</TableCell>
                       <TableCell width="10%">Краен датум</TableCell>
-                      <TableCell width="10%">Статус</TableCell>
                         <TableCell width="15%"></TableCell>
+                    </TableRow>
+                    <TableRow style={{backgroundColor:"#B6B9DC"}}>
+                      <TableCell width="10%"></TableCell>
+                      <TableCell width="18%">
+                      <SearchBar handleSearch={this.handleSearch} id="title"/></TableCell>
+                      <TableCell width="12%">
+                      <SearchBar handleSearch={this.handleSearch} id="description"/></TableCell>
+                      <TableCell width="10%">
+                      <Select placeholder={this.state.allDepartments[0]?.code} className="form-control" id="departments" onChange={this.handleChangeSelect}
+                                    options={this.state.allDepartments.map((department) => (
+                                        { value: department.id, label: department.code, name: "organizationalDepartmentId" }
+                                    ))}
+                                    styles={{
+                                        control: (provided) => ({
+                                        ...provided,
+                                        boxShadow: "none",
+                                        border: "none",
+                                        height: "10px"
+                                        }),
+                                        valueContainer: (provided, state) => ({
+                                          ...provided,
+                                          height: '34px'
+                                        }),
+                                    
+                                    }}>
+                                    </Select>
+                      </TableCell>
+                      <TableCell width="15%">
+                      <SearchBar handleSearch={this.handleSearch} id="submitterFirstNameLastName"/></TableCell>
+                      <TableCell width="10%">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                id="taskStartDate"  
+                                name="taskStartDate"
+                                value={dateFormat(this.state.employeeTrackingFormHelper.startDate, "mm/dd/yyyy")}
+                                onChange={this.handleChangeStartDate}
+                                renderInput={(params) => <TextField {...params} fullWidth sx={{ backgroundColor: 'white' }}
+                                />}/>
+                      </LocalizationProvider></TableCell>
+                      {this.state.tableForFinishedTasks && 
+                      <TableCell width="10%">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                id="taskEndDate"  
+                                name="taskEndDate"
+                                value={dateFormat(this.state.employeeTrackingFormHelper.endDate, "mm/dd/yyyy")}
+                                onChange={this.handleChangeEndDate}
+                                renderInput={(params) => <TextField {...params} fullWidth sx={{ backgroundColor: 'white' }}
+                                />}/>
+                      </LocalizationProvider></TableCell>
+                      }
+                      {!this.state.tableForFinishedTasks &&
+                      <TableCell width="10%"></TableCell>
+                      }
+                      <TableCell width="15%"></TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -668,6 +745,7 @@ export default class EmployeeTrackingFormTable extends Component{
                     )}
                     {(this.state.tasks).map((task, index) =>
                       <TableRow key={task.id} style={{ backgroundColor: this.colorRow(task.endDate) }}>
+                        <TableCell>{task.statusName}</TableCell>
                         <TableCell>{task.title && task.title.length <= 30 ? <b>{task.title}</b> : 
                           `${task.title.substring(0,30)}`}
                           {task.title.length > 30 && (<a style={{cursor: "cell"}} 
@@ -708,7 +786,6 @@ export default class EmployeeTrackingFormTable extends Component{
                         <TableCell>{task.creatorName} {task.creatorSurname}</TableCell>
                         <TableCell>{dateFormat(task.startDate, "dd/mm/yyyy")}</TableCell>
                         <TableCell>{task.endDate !== null ? dateFormat(task.endDate, "dd/mm/yyyy") : ""}</TableCell>
-                        <TableCell>{task.statusName}</TableCell>
                           <TableCell>
                             <button type="submit" class="btn btn-warning" onClick={е=>confirmAlert({
                           customUI: ({ onClose }) => {
