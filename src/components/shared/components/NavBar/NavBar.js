@@ -85,8 +85,8 @@ export default class NavBar extends Component {
               </span>
             </Link>}
             <Link to="#" className="menu-bars">
-            <button type="button" onClick={this.logOut} 
-            class="btn btn-primary-outline" style={{backgroundColor:"transparent", borderColor:"#ccc", color:"white"}}>Одјави се</button>
+            <button type="button" onClick={this.logOut} id="log-out"
+            class="btn btn-primary-outline">Одјави се</button>
             </Link>
             </div>
           </div>

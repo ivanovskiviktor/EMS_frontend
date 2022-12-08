@@ -188,7 +188,6 @@ export default class Administration extends Component{
         return (
             <Fragment>
             <NavBar/>
-            <br/>
             <h2 style={{marginTop:"2rem"}}>Администрација</h2>
             <br/><br/><br/>
             {spinner ? (<Spinner smaller="true"/>) :

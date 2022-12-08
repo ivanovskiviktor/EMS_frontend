@@ -19,9 +19,8 @@ export const FinishedWorkingTasksList = (props) => {
     return (
         <Fragment>
             <NavBar/>
-            <br/>
-            <br/>
-            <h2>Завршени задачи</h2>
+            <h2 style={{marginTop: '2rem'}}>Завршени задачи</h2>
+            <br/><br/>
             <EmployeeTrackingFormTable ref={instance => { child = instance; }} onToggleForm={()=> {formToggle()}} pageForFinishedItems={true}/>
             {!showForm?  <div style={{ position:"absolute", right:"0", left:"0", bottom:"0"}}>
                 </div> :

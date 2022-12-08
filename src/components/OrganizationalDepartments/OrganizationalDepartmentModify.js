@@ -251,7 +251,6 @@ export default class OrganizationalDepartmentModify extends Component {
         return( 
             <Fragment>
             <NavBar/>
-            <br/>
             {this.state.openOrgTasks && (
             <h2 style={{marginTop:"2rem"}}>Промена на работните задачи во рамки на организациски оддел</h2>)}
             {this.state.openHeadUsers && (

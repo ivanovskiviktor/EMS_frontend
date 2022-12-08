@@ -92,7 +92,6 @@ export default class NotesList extends Component {
         return (
         <Fragment>
             <NavBar/>
-            <br/>
             <h2 style={{marginTop:"2rem"}}>Забелешки</h2>
             <br/><br/><br/>
             {spinner ? (<Spinner smaller="true"/>) :

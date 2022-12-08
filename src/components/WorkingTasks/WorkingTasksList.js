@@ -165,7 +165,6 @@ render() {
     return (
         <Fragment>
             <NavBar/>
-            <br/>
             <h2 style={{marginTop:"2rem"}}>Работни задачи</h2>
             <br/><br/><br/>
             <Alert

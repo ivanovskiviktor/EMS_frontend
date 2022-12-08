@@ -26,6 +26,8 @@
         import { faCheck } from "@fortawesome/free-solid-svg-icons";
         import Checkbox from '@mui/material/Checkbox';
         import FormControlLabel from '@mui/material/FormControlLabel';
+        import './report-list.css';
+
 
         export default class ReportList extends React.Component {
 
@@ -563,7 +565,7 @@
                     <Fragment>
                     <NavBar/>
                     <h2 style={{marginTop:"2rem"}}>Извештаи</h2><br/><br/><br/>
-                    <div>
+                    <div id="report-filter">
                       <div className="row">
                         <div className="col-2" style={{marginLeft:"1rem", marginTop: '1.41rem'}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -626,8 +628,9 @@
                   </Form.Group>
                         </div>
                       </div>
+                      <br/>
                     </div>
-                    <TableContainer className="mt-4" component={Paper}>
+                    <TableContainer component={Paper}>
                     <Table className="table-striped table-hover" aria-label="simple table">
                     <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                           <TableRow>
@@ -699,7 +702,7 @@
                   <Fragment>
                     <NavBar/>
                     <h2 style={{marginTop:"2rem"}}>Извештаи</h2><br/><br/><br/>
-                    <div>
+                    <div id="report-filter">
                       <div className="row">
                         <div className="col-2" style={{marginLeft:"1rem", marginTop: '1.41rem'}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -742,8 +745,9 @@
                   </Form.Group>
                         </div>
                       </div>
+                      <br/>
                     </div>
-                    <TableContainer className="mt-4" component={Paper}>
+                    <TableContainer component={Paper}>
                     <Table className="table-striped table-hover" aria-label="simple table">
                     <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                           <TableRow>
@@ -814,7 +818,7 @@
                 <Fragment>
                     <NavBar/>
                     <h2 style={{marginTop:"2rem"}}>Извештаи</h2><br/><br/><br/>
-                    <div>
+                    <div id="report-filter">
                       <div className="row">
                         <div className="col-2" style={{marginLeft:"1rem", marginTop: '1.41rem'}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -916,7 +920,7 @@
                       onChange={this.handleSearch}/>
                   </Form.Group>
                         </div>
-                        <div className="col-2" style={{marginTop: '3rem'}}>
+                        <div className="col-2" style={{marginTop: '2.9rem'}}>
                         <FormControlLabel 
                             control={
                             <Checkbox checked={this.state.checked} name="tasks" id="tasks" value="tasks"
@@ -939,7 +943,7 @@
                         </div>
                       </div>
                     </div>
-                    <TableContainer className="mt-4" component={Paper}>
+                    <TableContainer component={Paper}>
                     <Table className="table-striped table-hover" aria-label="simple table">
                     <TableHead className="tableHead" style={{backgroundColor:"#B6B9DC"}}>
                           <TableRow>

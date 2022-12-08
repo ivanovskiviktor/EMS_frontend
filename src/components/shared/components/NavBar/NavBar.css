@@ -77,6 +77,21 @@
   span {
     margin-left: 16px;
   }
+
+  #log-out {
+    margin-left: -0.7rem;
+    background-color: transparent;
+    border-color:#ccc;
+    color:white;
+    font-weight: bold;
+  }
+
+  #log-out:hover {
+    border-color: #d43f3a;
+    background-color: #d9534f;
+    color: white;
+    font-weight: bold;
+  }
   
   @media screen and (min-width: 1537px) and (max-width: 1706.66px) {
 	

@@ -499,7 +499,10 @@ export default class EmployeeTrackingFormTable extends Component{
                     <TableBody>
                     {tasks.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема {this.state.tableForFinishedTasks ? "завршени" : "тековни"} форми на задачи</TableCell>
+                        {role === "ROLE_HEAD_OF_DEPARTMENT" && 
+                        <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема {this.state.tableForFinishedTasks ? "завршени" : "тековни"} форми на задачи за избраниот датум!</TableCell>}
+                        {role === "ROLE_EMPLOYEE" && 
+                        <TableCell colSpan={12} style={{ "text-align": "center" }}>Немате {this.state.tableForFinishedTasks ? "завршени" : "тековни"} форми на задачи за избраниот датум!</TableCell>}
                       </TableRow>
                     )}
                     {(this.state.tasks).map((task, index) =>
@@ -740,7 +743,7 @@ export default class EmployeeTrackingFormTable extends Component{
                     <TableBody>
                     {tasks.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема {this.state.tableForFinishedTasks ? "завршени" : "тековни"} форми на задачи</TableCell>
+                        <TableCell colSpan={12} style={{ "text-align": "center" }}>Нема {this.state.tableForFinishedTasks ? "завршени" : "тековни"} форми на задачи за избраниот датум!</TableCell>
                       </TableRow>
                     )}
                     {(this.state.tasks).map((task, index) =>
